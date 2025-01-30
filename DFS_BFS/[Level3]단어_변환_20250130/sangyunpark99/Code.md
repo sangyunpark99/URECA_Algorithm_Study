@@ -22,7 +22,7 @@ class Solution {
         
         bfs();
         
-        return answer > 0 ? answer : 0;
+        return answer;
     }
     
     private void bfs() {
