@@ -5,7 +5,7 @@ import java.util.*;
 class Solution {
     
     private static List<String>[] adj;
-    private static boolean[] visited;
+    private static int visited;
     private static HashMap<String, Integer> info = new HashMap<>();
     
     public int solution(String begin, String target, String[] words) {
@@ -18,7 +18,6 @@ class Solution {
         
         init(begin, words);
         
-        visited = new boolean[words.length+1];
         
         
         
@@ -77,7 +76,7 @@ class Solution {
         Queue<Word> q = new ArrayDeque<>();
         
         q.offer(new Word(begin, 0));
-        visited[0] = true;
+        visited = 1;
         
         while(!q.isEmpty()) {
             
@@ -90,8 +89,9 @@ class Solution {
             int idx = info.get(curr.w);
             
             for(String s : adj[idx]) {
-                if(!visited[info.get(s)]){
-                    visited[info.get(s)] = true;
+                int tmp = info.get(s);
+                if((visited & (1<<tmp)) == 0){
+                   visited |= (1<<tmp);
                     q.offer(new Word(s, curr.cnt+1));
                 }
             }
