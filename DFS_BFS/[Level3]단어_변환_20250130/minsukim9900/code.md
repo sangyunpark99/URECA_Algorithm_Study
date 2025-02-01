@@ -4,118 +4,106 @@ import java.util.*;
 
 class Solution {
     
-    private static List<String>[] adj;
-    private static int visited;
-    private static HashMap<String, Integer> info = new HashMap<>();
+    private static int[][] map = new int[102][102];
+    private static boolean[][] visited;
+    private static int[][] delta = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    private static int cnt;
     
-    public int solution(String begin, String target, String[] words) {
+    public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
         
-        
-        adj = new ArrayList[words.length+1];
-        for(int i = 0; i < words.length+1; i++) {
-            adj[i] = new ArrayList<>();
-        }
-        
-        init(begin, words);
-        
-        
-        
-        
-        
-        return bfs(begin, target, words);
-    }
-    
-    private static boolean isCorrect(String word, String comp) {
-        
-        int cnt = 0;
-        
-        for(int i = 0; i< word.length() ; i++) {
-           if(word.charAt(i) != comp.charAt(i)) cnt++;   
-        }
-        
-        if(cnt > 1) return false;
-        
-        return true;
-        
-        
-    }
-    
-    private static void init(String begin, String[] words) {
-        
-        for(int i = 0; i < words.length; i++) {
+        for(int i =0; i < rectangle.length; i++) {
             
-            if(isCorrect(begin, words[i])) {
-                adj[0].add(words[i]);
-            }
-        
-        }
-        
-        for(int i = 0; i<words.length; i++) {
-            
-            for(int j = 0; j<words.length; j++) {
-                
-                if(i == j) continue;
-                
-                if(isCorrect(words[i], words[j])) {
-                    adj[i+1].add(words[j]);
+            for(int x = rectangle[i][0] * 2; x <= rectangle[i][2] * 2; x++ ) {
+                for(int y = rectangle[i][1] * 2; y <= rectangle[i][3] * 2; y++) {
+                    map[x][y] = 1;
                 }
-            
             }
+            
         }
         
-        info.put(begin, 0);
+       
         
-        for(int i = 0; i<words.length; i++) {
-            info.put(words[i], i+1);
-        }
+        changeOutline();
         
+        bfs(characterX*2, characterY*2, itemX*2, itemY*2);
+        return cnt / 2;
     }
     
-    private static int bfs(String begin, String target, String[] words) {
+    private static void changeOutline() {
         
-        Queue<Word> q = new ArrayDeque<>();
-        
-        q.offer(new Word(begin, 0));
-        visited = 1;
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[] {0, 0});
+        visited = new boolean[102][102];
         
         while(!q.isEmpty()) {
             
-            Word curr = q.poll();
+            int[] curr = q.poll();
             
-            if(curr.w.equals(target)) {
-                return curr.cnt;
-            }
-            
-            int idx = info.get(curr.w);
-            
-            for(String s : adj[idx]) {
-                int tmp = info.get(s);
-                if((visited & (1<<tmp)) == 0){
-                   visited |= (1<<tmp);
-                    q.offer(new Word(s, curr.cnt+1));
+            for(int i = 0; i < 8; i++) {
+                
+                int nr = curr[0] + delta[i][0];
+                int nc = curr[1] + delta[i][1];
+                
+                
+                if(nr >= 0 && nr < 102 && nc >= 0 && nc < 102 && visited[nr][nc] == false) {
+                    
+                    if(map[nr][nc] == 1){
+                        
+                        map[nr][nc] = 2;
+                        
+                        
+                    } 
+                    else{
+                        q.offer(new int[] {nr, nc});
+                    }
+                    visited[nr][nc] = true;
+                    
                 }
+                
             }
             
+        }
+        
+    }
+    
+    private static void bfs(int sx, int sy, int ex, int ey) {
+        
+        visited = new boolean[102][102];
+        
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[]{sx, sy, 0});
+        
+        while(!q.isEmpty()) {
+            
+            int[] curr = q.poll();
+            
+            if(curr[0] == ex && curr[1] == ey) {
+                cnt = curr[2];
+                return;
+            }
+            
+                
+            for(int i = 0; i<4; i++) {
+
+                int nr = curr[0] + delta[i][0];
+                int nc = curr[1] + delta[i][1];
+
+                if(nr >= 0 && nr < 102 && nc >= 0 && nc < 102 && !visited[nr][nc] && map[nr][nc] == 2) {
+
+
+                    visited[nr][nc] = true;
+                    q.offer(new int[]{nr, nc, curr[2] + 1});
+
+    
+
+                }
+
+            }
+                
             
         }
         
-        return 0;
-        
-        
     }
-    
-    private static class Word {
-        
-        private String w;
-        private int cnt;
-        
-        private Word(String w, int cnt) {
-            this.w = w;
-            this.cnt = cnt;
-        }
-        
-    }
-    
     
 }
 ```
