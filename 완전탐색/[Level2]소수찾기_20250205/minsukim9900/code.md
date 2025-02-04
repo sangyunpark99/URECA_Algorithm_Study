@@ -76,6 +76,7 @@ class Solution {
         
     }
 }
+
 ```
 
-![img](/[Level2]소수찾기_20250205/minsukim9900/images.png)
+![images](https://github.com/user-attachments/assets/fa71991c-9107-4f8c-87f0-add1ba453d33)
