@@ -78,5 +78,3 @@ class Solution {
 }
 
 ```
-
-![images](https://github.com/user-attachments/assets/fa71991c-9107-4f8c-87f0-add1ba453d33)
