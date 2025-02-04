@@ -14,13 +14,14 @@ class Solution {
         
         charArr = dividing(numbers);
         N = numbers.length();
+        
         for(int i = 1; i <= charArr.length; i++) {
             
             M = i;
             visited = 0;
             result = new char[M];
-            
-            dfs(0);
+            StringBuilder sb = new StringBuilder();
+            dfs(0, sb);
             
         }
         
@@ -28,18 +29,11 @@ class Solution {
         return answer;
     }
     
-    private static void dfs(int depth) {
+    private static void dfs(int depth, StringBuilder sb) {
         
         if(depth == M) {
-            
-            String str = "";
-            for(int i = 0; i< M; i++) {
-                if(i == 0 && result[i] == '0') continue;
-                str += result[i];
-            }
-            
-            if(!str.equals("") && isPrime(str)) {
-                nums.add(Integer.parseInt(str));
+            if(isPrime(sb.toString())) {
+                nums.add(Integer.parseInt(sb.toString()));
             }
             
         }else {
@@ -47,9 +41,9 @@ class Solution {
                 
                 if((visited & (1<<i)) == 0) {
                     visited |= (1<<i);
-                    result[depth] = charArr[i];
-                    dfs(depth+1);
+                    dfs(depth+1, sb.append(charArr[i]));
                     visited ^= (1<<i);
+                    sb.deleteCharAt(depth);
                 } 
                 
             }
@@ -82,6 +76,5 @@ class Solution {
         
     }
 }
-```
 
-![images](https://github.com/user-attachments/assets/fa71991c-9107-4f8c-87f0-add1ba453d33)
+```
