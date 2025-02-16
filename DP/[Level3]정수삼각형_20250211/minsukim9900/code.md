@@ -6,36 +6,28 @@ class Solution {
     
     public int solution(int[][] triangle) {
         
-        int size = triangle.length;
-        
-        int[][] dp = new int[size + 1][triangle[size-1].length];
-        
-        dp[1][0] = triangle[0][0];
-        
-        if(size >= 2) {
-            dp[2][0] = triangle[1][0];
-            dp[2][1] = triangle[1][1];
+            int size = triangle.length;
             
-            for (int i = 3; i<= size; i++) {
+            for (int i = 1; i< size; i++) {
                 
-                for(int j = 0; j < triangle[i - 1].length; j++) {
-                    int tmp = j - 1;
-                    if(tmp < 0) tmp = 0;
+                triangle[i][0] += triangle[i-1][0];
+                triangle[i][triangle[i].length-1] += triangle[i-1][triangle[i].length-2];
+                
+                for(int j = 1; j < i; j++) {
                     
-                    dp[i][j] = Math.max(dp[i-1][tmp], dp[i-1][j]) + triangle[i-1][j];
+                    triangle[i][j] += Math.max(triangle[i-1][j-1], triangle[i-1][j]);
                     
                 }
                 
             }
             
-        }
         
         int max = 0;
-        for(int m : dp[size]) {
+        for(int m : triangle[size - 1]) {
             max = Math.max(max, m);
         }
         
-        return max + triangle[0][0];
+        return max;
        
     }
     
@@ -43,5 +35,4 @@ class Solution {
 }
 ```
 
-### 실행결과
 [!img.png](img.png)
